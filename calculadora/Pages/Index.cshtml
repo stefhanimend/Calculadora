@@ -1,10 +1,487 @@
 ﻿@page
 @model IndexModel
-@{
-    ViewData["Title"] = "Home page";
-}
+
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h2 class="display-4">Calculadora da Sté</h2>
 </div>
+<div style="background: pink; width: 220px; height: 200px; padding: 5px; margin-left: 450px; margin-top: 25px;">
+    <div id="visor" style="background: white; border-color: pink; border-width: medium; border-style: solid; height: 45px;">
+        <label style=" font-size: 20px;" id="telaview"></label>
+    </div>
+    <input type="hidden" id="valor1" />
+    <input type="hidden" id="valor2" />
+    <input type="hidden" id="operador" />
+    <input type="hidden" id="parentesesAbre" value="false" />
+    <input type="hidden" id="parentesesFecha" value="false" />
+    <input type="hidden" id="numerosCalculadora" value="0123456789" />
+    <div id="numeros" style="padding:2px;">
+        <button id="btn1" style="background: white; color: lightblue; border-color: lavender; width: 30px; margin-bottom: 5px;" onclick="numeros(1)">
+            1
+        </button>
+        <button id="btn2" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="numeros(2)">
+            2
+        </button>
+        <button id="btn3" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="numeros(3)">
+            3
+        </button>
+        <button id="btn_c" style="background: white; color: lightblue; border-color: lavender; width: 65px; margin-bottom: 5px;" onclick="clearTela()">
+            C
+        </button>
+        <button id="btn_pi" style="background: white; color: lightblue; border-color: lavender; width: 30px; margin-bottom: 5px;" onclick="operadores('PI')">
+            π
+        </button>
+        <br />
+        <button id="btn4" style="background: white; color: lightblue; border-color: lavender; width: 30px; margin-bottom: 5px;" onclick="numeros(4)">
+            4
+        </button>
+        <button id="btn5" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="numeros(5)">
+            5
+        </button>
+        <button id="btn6" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="numeros(6)">
+            6
+        </button>
+        <button id="btn_soma" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="operadores('+')">
+            +
+        </button>
+        <button id="btn_subtracao" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="operadores('-')">
+            -
+        </button>
+        <button id="btn_aoquadrado" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="operadores('X')">
+            X<sup>2</sup>
+        </button>
+        <br />
+        <button id="btn7" style="background: white; color: lightblue; border-color: lavender; width: 30px; margin-bottom: 5px;" onclick="numeros(7)">
+            7
+        </button>
+        <button id="btn8" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="numeros(8)">
+            8
+        </button>
+        <button id="btn9" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="numeros(9)">
+            9
+        </button>
+        <button id="btn_divisao" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="operadores('/')">
+            /
+        </button>
+        <button id="btn_multiplicacao" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="operadores('*')">
+            *
+        </button>
+        <button id="btn_raizquadrada" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="operadores('Q')">
+            √
+        </button>
+        <br />
+        <button id="btn0" style="background: white; color: lightblue; border-color: lavender; width: 65px; margin-bottom: 5px;" onclick="numeros(0)">
+            0
+        </button>
+        <button id="btn_virgula" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="numeros('.')">
+            .
+        </button>
+        <button id="btn_parenteses1" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="operadores('(')">
+            (
+        </button>
+        <button id="btn_parenteses2" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="operadores(')')">
+            )
+        </button>
+        <button id="btn_igualdade" style="background: white;color: lightblue;border-color: lavender; width: 30px;" onclick="operadores('=')">
+            =
+        </button>
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript">
+
+    function clearTela() {
+        $('#telaview').text("");
+        $('#valor1').val('');
+        $('#valor2').val('');
+        $('#operador').val('');
+        $('#parentesesAbre').val(false);
+        $('#parentesesFecha').val(false);
+    }
+
+    function numeros(valor)
+    {
+        $('#telaview').text($('#telaview').text() + valor);
+    }
+
+    function operadores(operador) {
+        debugger
+        if (operador == "(") {
+            if ($('#parentesesAbre').val() == "false") {
+                if ($('#telaview').text() == "") {
+                    $('#telaview').text("(");
+                }
+                else {
+                    $('#valor1').val($('#telaview').text());
+                    $('#telaview').text($('#telaview').text() + "(");
+                }
+                $('#parentesesAbre').val(true);
+            }
+        }
+
+        if (operador == ")") {
+            if ($('#parentesesAbre').val() == "true") {
+                if ($('#valor2').val() == "") {
+                    calculo();
+                    $('#parentesesAbre').val(true);
+                    $('#parentesesFecha').val(true);
+                    $('#telaview').text($('#telaview').text() + operador);
+                    $('#operador').val("*");
+                }
+                else {
+                    calculo()
+                    $('#telaview').text($('#telaview').text() + operador);
+                    $('#parentesesFecha').val(true);
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
+        if (operador == "X")
+        {
+            if ($('#telaview').text().slice(-1) != ")") {
+                return false;
+            }
+            else
+            {
+                var operadorAntigo = "";
+                $('#telaview').append("<sup>2</sup>");
+                var parentesesAbre = $('#telaview').text().indexOf('(');
+                var parentesesFecha = $('#telaview').text().indexOf(')');
+                if ($('#valor1').val() == "")
+                {
+                    $('#valor1').val($('#telaview').text().substring(parentesesAbre + 1, parentesesFecha));
+                } else
+                {
+                    $('#valor2').val($('#valor1').val());
+                    $('#valor1').val($('#telaview').text().substring(parentesesAbre + 1, parentesesFecha));
+                }
+
+                if ($('#operador').val() != "")
+                {
+                    operadorAntigo = $('#operador').val();
+                }
+                $('#operador').val(operador);
+                calculo();
+                if (operadorAntigo != "")
+                {
+                    $('#operador').val(operadorAntigo);
+                }
+            }
+        }
+        // raiz Quadrada
+        if (operador == "Q")
+        {
+            if ($('#valor2').val() == "" && $('#operador').val() == "") {
+                if ($('#valor1').val() == "")
+                {
+                    $('#valor1').val($('#telaview').text());
+                }
+                    $('#operador').val(operador);
+                calculo();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        if (operador == "PI") {
+            if ($('#valor2').val() == "" && $('#operador').val() == "") {
+                if ($('#valor1').val() == "") {
+                    $('#telaview').text($('#telaview').text() + Math.PI)
+                }
+                return true;
+            }
+            else {
+                return false;
+            }
+
+        }
+
+        if (operador != "(" && operador != ")" && operador != "X") {
+            if ($('#parentesesAbre').val() == "true") {
+                if ($('#parentesesFecha').val() == "false") {
+                    if ($('#valor1').val() != "") {
+                        if ($('#valor2').val() == "") {
+                            var parentesesAbre = $('#telaview').text().indexOf('(');
+                            if (parentesesAbre == 0)
+                            {
+                                calculo()
+                                if (operador == "=") {
+                                    $('#telaview').text($('#telaview').text());
+                                    $('#operador').val("");
+                                }
+                                else {
+                                    $('#telaview').text($('#telaview').text() + operador);
+                                    $('#operador').val(operador);
+                                }
+                            }
+                            else
+                            {
+                                $('#valor2').val($('#valor1').val());
+                                if (operador == "=") {
+                                    $('#telaview').text($('#telaview').text());
+                                    $('#operador').val("");
+                                }
+                                else {
+                                    $('#telaview').text($('#telaview').text() + operador);
+                                    $('#operador').val(operador);
+                                }
+                                var valor1 = $('#telaview').text().indexOf($('#operador').val());
+                                $('#valor1').val($('#telaview').text().substring(parentesesAbre + 1, valor1));
+                            }
+                        }
+                        else
+                        {
+                            calculo()
+                            if (operador == "=") {
+                                $('#telaview').text($('#telaview').text());
+                                $('#operador').val("");
+                            }
+                            else {
+                                $('#telaview').text($('#telaview').text() + operador);
+                                $('#operador').val(operador);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $('#telaview').text($('#telaview').text() + operador);
+                        var parentesesAbre = $('#telaview').text().indexOf('(');
+                        var operadorMomento = $('#telaview').text().indexOf(operador);
+                        $('#valor1').val($('#telaview').text().substring(parentesesAbre + 1, operadorMomento));
+                        $('#operador').val(operador);
+                    }
+                }
+                else
+                {
+                    if ($('#valor1').val() == "")
+                    {
+                        var parentesesAbre = $('#telaview').text().indexOf('(');
+                        var parentesesFecha = $('#telaview').text().indexOf(')');
+                        $('#valor1').val($('#telaview').text().substring(parentesesAbre + 1, parentesesFecha));
+                    }
+                    if ($('#valor2').val() == "") {
+                        if ($('#operador').val() != "" && $('#operador').val() != "X") {
+                            var valor2 = $('#telaview').text().indexOf($('#operador').val());
+                            if ($('#operador').val() == "*") {
+                                valor2 = $('#telaview').text().indexOf("(");
+                                if (valor2 == 0) {
+                                    valor2 = $('#telaview').text().indexOf(")");
+                                }
+
+                            }
+                            if (valor2 != -1 && $('#telaview').text().substring(valor2 + 1).length > 0) {
+                                $('#valor2').val($('#telaview').text().substring(valor2 + 1));
+                                calculo()
+                            }
+                            else
+                            {
+                                var parentesesAbre = $('#telaview').text().indexOf('(');
+                                var parentesesFecha = $('#telaview').text().indexOf(')');
+                                $('#valor2').val($('#telaview').text().substring(parentesesAbre + 1, parentesesFecha));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var valor1 = $('#telaview').text().indexOf($('#valor1').val());
+                        var valor2 = $('#telaview').text().indexOf($('#valor2').val());
+                        if ($('#telaview').text().substring(valor1 + 1, valor2).includes('('))
+                        {
+                            $('#operador').val('*')
+                        }
+                        calculo();
+                    }
+                    if (operador == "=") {
+                        calculo()
+                        $('#telaview').text($('#telaview').text());
+                        $('#valor1').val($('#telaview').text());
+                        $('#valor2').val('');
+                        $('#operador').val("");
+                    }
+                    else
+                    {
+                        $('#valor1').val($('#telaview').text());
+                        $('#telaview').text($('#telaview').text() + operador);
+                        $('#valor2').val('');
+                        $('#operador').val(operador);
+                    }
+                }
+            }
+            else
+            {
+                if ($('#valor2').val() != "")
+                {
+                    $('#valor2').val($('#telaview').text());
+                    var valor1 = $('#telaview').text().indexOf($('#valor1').val());
+                    var valor2 = $('#telaview').text().indexOf($('#valor2').val());
+                    if ($('#telaview').text().substring(valor1 + 1, valor2).includes('(') || $('#telaview').text().substring(valor1 + 1, valor2).includes(')'))
+                    {
+                        $('#operador').val('*')
+                    }
+                    calculo()
+                    $('#valor1').val($('#telaview').text());
+                    $('#valor2').val('')
+                    $('#operador').val('')
+                }
+                else
+                {
+                    if ($('#valor1').val() != "")
+                    {
+                        var valor2 = $('#telaview').text().indexOf($('#operador').val());
+                        if (valor2 == -1 && $('#operador').val() == "*") {
+                            valor2 = $('#telaview').text().indexOf("(");
+                            if (valor2 == 0) {
+                                valor2 = $('#telaview').text().indexOf(")");
+                            }
+                        }
+                        if (valor2 != -1 && $('#telaview').text().substring(valor2 + 1).length > 0) {
+                            $('#valor2').val($('#telaview').text().substring(valor2 + 1));
+                            calculo()
+                        }
+                        $('#valor1').val($('#telaview').text());
+                        $('#valor2').val('')
+                        if (operador == "=")
+                        {
+                            $('#telaview').text($('#telaview').text());
+                            $('#valor1').val($('#telaview').text());
+                            $('#valor2').val('');
+                            $('#operador').val("");
+                        }
+                        else
+                        {
+                            $('#valor1').val($('#telaview').text());
+                            $('#telaview').text($('#telaview').text() + operador);
+                            $('#valor2').val('');
+                            $('#operador').val(operador);
+                        }
+                    }
+                    else
+                    {
+                        $('#valor1').val($('#telaview').text());
+                        $('#telaview').text($('#telaview').text() + operador);
+                        $('#operador').val(operador);
+                    }
+                }
+            }
+        }
+    }
+
+    function calculo() {
+        debugger
+        if ($('#operador').val() != "") {
+            if ($('#parentesesAbre').val() == "true" && $('#parentesesFecha').val() == "false") {
+                var parentesesAbre = $('#telaview').text().indexOf($('#operador').val());
+                var valor2 = $('#telaview').text().substring(parentesesAbre + 1);
+                if (valor2 == "") { valor2 = 0 }
+                var tela = $('#telaview').text().indexOf('(');
+                var telaValor = $('#telaview').text().substring(0,tela + 1);
+                switch ($('#operador').val()) {
+                    case "+":
+                        var resultado = parseFloat($('#valor1').val()) + parseFloat(valor2);
+                        $('#telaview').text(telaValor + resultado);
+                        $('#valor1').val(resultado);
+                        break;
+                    case "-":
+                        var resultado = parseFloat($('#valor1').val()) - parseFloat(valor2);
+                        $('#telaview').text(telaValor + resultado);
+                        $('#valor1').val(resultado);
+                        break;
+                    case "*":
+                        var resultado = parseFloat($('#valor1').val()) * parseFloat(valor2);
+                        $('#telaview').text(telaValor + resultado);
+                        $('#valor1').val(resultado);
+                        break;
+                    case "/":
+                        var resultado = parseFloat($('#valor1').val()) / parseFloat(valor2);
+                        $('#telaview').text(telaValor + resultado);
+                        $('#valor1').val(resultado);
+                        break;
+                    case "2":
+                        var resultado = parseFloat($('#valor1').val()) * parseFloat(valor2);
+                        $('#telaview').text(telaValor + resultado);
+                        $('#valor1').val(resultado);
+                        break;
+                    case ")":
+                        var resultado = parseFloat($('#valor1').val()) * parseFloat(valor2);
+                        $('#telaview').text(telaValor + resultado);
+                        $('#valor1').val(resultado);
+                        break;
+                    case "Q":
+                        var resultado = Math.pow($('#valor1').val(), 0.5);
+                        $('#telaview').text(resultado);
+                        $('#valor1').val(resultado);
+                        break;
+
+                }
+            }
+            else {
+                var valor2 = 0;
+                if ($('#valor2').val() != "") { valor2 = $('#valor2').val() }
+                var tela = $('#telaview').text().indexOf('(');
+                var telaValor = $('#telaview').text().substring(0, tela);
+                switch ($('#operador').val()) {
+                    case "+":
+                        var resultado = parseFloat($('#valor1').val()) + parseFloat(valor2);
+                        $('#telaview').text(resultado);
+                        break;
+                    case "-":
+                        var resultado = parseFloat($('#valor1').val()) - parseFloat(valor2);
+                        $('#telaview').text(resultado);
+                        break;
+                    case "*":
+                        var resultado = parseFloat($('#valor1').val()) * parseFloat(valor2);
+                        $('#telaview').text(resultado);
+                        break;
+                    case "/":
+                        var resultado = parseFloat($('#valor1').val()) / parseFloat(valor2);
+                        $('#telaview').text(resultado);
+                        break;
+                    case "X":
+                        var resultado = parseFloat($('#valor1').val()) * parseFloat($('#valor1').val());
+                        $('#telaview').text(telaValor + '(' + resultado + ')');
+                        $('#valor1').val(resultado);
+                        $('#operador').val('')
+                        break;
+                    case ")":
+                        var resultado = parseFloat($('#valor1').val()) * parseFloat(valor2);
+                        $('#telaview').text(resultado);
+                        break;
+                    case "Q":
+                        var resultado = Math.pow($('#valor1').val(), 0.5);
+                        $('#telaview').text(resultado);
+                        $('#valor1').val(resultado);
+                        break;
+                }
+
+            }
+
+        }
+        if ($('#telaview').text().includes('('))
+        {
+            $('#parentesesAbre').val(true);
+        }
+        else
+        {
+            $('#parentesesAbre').val(false);
+        }
+        if ($('#telaview').text().includes(')'))
+        {
+            $('#parentesesFecha').val(true);
+        }
+        else
+        {
+            $('#parentesesFecha').val(false);
+        }
+
+    }
+
+</script>
