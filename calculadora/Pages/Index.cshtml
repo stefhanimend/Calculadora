@@ -108,7 +108,6 @@
     }
 
     function operadores(operador) {
-        debugger
         if (operador == "(") {
             if ($('#parentesesAbre').val() == "false") {
                 if ($('#telaview').text() == "") {
@@ -376,7 +375,6 @@
     }
 
     function calculo() {
-        debugger
         if ($('#operador').val() != "") {
             if ($('#parentesesAbre').val() == "true" && $('#parentesesFecha').val() == "false") {
                 var parentesesAbre = $('#telaview').text().indexOf($('#operador').val());
